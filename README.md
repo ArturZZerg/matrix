@@ -21,7 +21,7 @@ This is a Python library that provides functionality to perform basic matrix ope
 To install this library, clone this repository:
 
 ```bash
-git clone https://github.com/yourusername/matrix-operations.git
+git clone https://github.com/ArturZZerg/matrix.git
 ```
 
 Once cloned, install any necessary dependencies:
