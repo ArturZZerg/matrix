@@ -1,4 +1,4 @@
-```markdown
+
 # **MATRIX OPERATIONS LIBRARY**
 
 This is a Python library that provides functionality to perform basic matrix operations and convert matrices to **Reduced Row Echelon Form (RREF)**. The library supports operations with fractions to maintain precision in calculations.
@@ -90,4 +90,4 @@ Contributions are welcome! Please follow these steps:
 ## **CONTACT**
 
 For questions or suggestions, please contact me at **artur.vakula@gmail.com**.
-```
+
