@@ -1,4 +1,3 @@
-
 ```markdown
 # **MATRIX OPERATIONS LIBRARY**
 
@@ -21,15 +20,15 @@ This is a Python library that provides functionality to perform basic matrix ope
 
 To install this library, clone this repository:
 
-```bash
+    ```bash
 git clone https://github.com/yourusername/matrix-operations.git
-```
+    ```
 
 Once cloned, install any necessary dependencies:
 
-```bash
+    ```bash
 pip install -r requirements.txt
-```
+    ```
 
 > If you're using fractions in your code, ensure that you have Python's `fractions` module available, which comes by default with Python installations.
 
@@ -38,7 +37,7 @@ pip install -r requirements.txt
 Here's an example of how to use the library:
 
 
-```python
+    ```python
 from matrix import Matrix,calc_matrix
 
 # Create a matrix using a two-dimensional list
@@ -47,14 +46,14 @@ A = Matrix([[1, 2], [3, 4]])
 # Convert to RREF
 calc_matrix(A)
 print(A)
-```
+    ```
 
 ## **MATRIX CLASS METHODS**
 
 ### **Initialization**
-```python
+    ```python
 Matrix(matrix: list[list[float]])
-```
+    ```
 Initialize the matrix with a 2D list of numbers.
 
 
