@@ -59,7 +59,7 @@ Initialize the matrix with a 2D list of numbers.
 
 ### **Basic Operations**
 - rows in matrix starts from 1.
-- `add_trans(self, r1, r2, mult=None)`: Subtracts. r1(row number) += r2(row number)*mult
+- `add_trans(self, r1, r2, mult=None)`: Adds. r1(row number) += r2(row number)*mult
 - `sub_trans(self, r1, r2, mult=None)`: Subtracts. r1(row number) -= r2(row number)*mult.
 - `mult_trans(self,r, mult)`: Multiplies r(row number)+=mult.
 - `div_trans(matrix: Matrix)`: Divides r(row number)/=mult.
