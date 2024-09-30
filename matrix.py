@@ -10,6 +10,10 @@ The Matrix class also provides a rref_calc method which calculates the RREF of a
 """
 from fractions import Fraction
 
+#custom exeption class
+class MatrixException(Exception):
+    pass
+
 class Matrix:
     """
     Class for matrix operations with Fraction support
@@ -18,21 +22,30 @@ class Matrix:
     """
     matrix_template = []
 
-    def __init__(self, args):
-        """
-        Initialization method for Matrix class
+    def __init__(self, args):      
+        try:
+            size= len(args[0])
+        except:
+            raise MatrixException("Constructor: args not a matrix")
+            
+        if type(args) == list:
+            for row in args:
+                if type(row) == list:
+                    if size == len(row):
+                         for element in row:
+                             if (type(element) != int) and (type(element) != Fraction) and (type(element) != float):
+                                 raise MatrixException("Constructor: args not a matrix, not a matrix of numbers")
+                    else:
+                        raise MatrixException("Constructor: args not a matrix, rows have different length")
+                else:
+                    raise MatrixException("Constructor: args not a matrix, not 2d array")
+            self.matrix_template = args
+        else:
+            raise MatrixException("Constructor: args not a matrix, not array")
         
-        @param args: a two-dimensional list of integers
-        """
-        self.matrix_output = ""
-        self.matrix_template = args
 
     def __str__(self) -> str:
-        """
-        Returns a string representation of the matrix, with each element aligned to the left and separated by a space.
-        Elements are displayed in a field of width 3, with negative numbers displayed in a field of width 4.
-        """
-        matrix_output =""
+        matrix_output = ""
         for i in self.matrix_template:
             for c in i:
                 if len(str(c)) < 3:
@@ -44,6 +57,7 @@ class Matrix:
 
         return matrix_output
 
+    #Adds. r1(row number) += r2(row number)*mult
     def add_trans(self, r1, r2, mult=None):
         
         """
@@ -69,6 +83,7 @@ class Matrix:
                 for i in range(len(self.matrix_template[r2 - 1]))
             ]
 
+    #Subtracts. r1(row number) -= r2(row number)*mult.
     def sub_trans(self, r1, r2, mult=None):
         """
         Subtracts row r2 from row r1, scaled by mult if provided
@@ -93,6 +108,7 @@ class Matrix:
                 for i in range(len(self.matrix_template[r2 - 1]))
             ]
 
+    #Multiplies r(row number)+=mult.
     def mult_trans(self, r, mult):
         """
         Scales row r by mult
@@ -108,6 +124,7 @@ class Matrix:
                 for i in range(len(self.matrix_template[r - 1]))
             ]
 
+    #Divides r(row number)/=mult.
     def div_trans(self, r, mult):
         """
         Divides row r by mult
@@ -120,6 +137,8 @@ class Matrix:
         if mult != 0:
             self.matrix_template[r - 1] = [Fraction(Fraction(self.matrix_template[r - 1][i]), Fraction(mult)) for i in range(len(self.matrix_template[r - 1]))] 
 
+
+    #Swaps two rows of the matrix.
     def swap_trans(self, r1, r2):
         """
         Swaps row r1 with row r2
@@ -134,7 +153,41 @@ class Matrix:
             self.matrix_template[r2 - 1],
             self.matrix_template[r1 - 1],
         )
+            
+#Counts determinant header
+  def determinant(self):
+      if len(self.matrix_template) != (len(self.matrix_template[0])-1):
+          raise MatrixException("Not square matrix do not have determinant")
 
+      if len(self.matrix_template) == 1:
+          return self.matrix_template[0][0]
+
+      mat_rix_square = []
+      for row in range(len(self.matrix_template)):
+          mat_rix_square.append([])
+          for column in range(len(self.matrix_template)):
+              mat_rix_square[row].append(self.matrix_template[row][column])
+
+      return determinant_doer(mat_rix_square)
+
+#Counts determinant doer
+  def determinant_doer(self):
+      det = 0
+
+      if len(self) == 2:
+          det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
+      else:
+          for col in range(len(self)):
+              minor_mat_rix=[]
+              for row in range(1,len(self)):
+                  minor_mat_rix.append([])
+                  for column in range(len(self)):
+                      if column != col:
+                          minor_mat_rix[row-1].append(self[row][column])
+
+              det = det + pow(-1,col) * self[0][col] * determinant_doer(minor_mat_rix)
+      return det
+    
     def rref_calc(self):
         """
         Finds the RREF of a matrix.
@@ -208,4 +261,5 @@ class Matrix:
                         continue
                     find_0(self, r_index, n, 0,count_1,row_d)
                 r_index += 1
+
 
