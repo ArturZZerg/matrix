@@ -22,17 +22,17 @@ class Matrix:
     """
     matrix_template = []
 
-    def __init__(self, args):      
+    def __init__(self, args):
         try:
             size= len(args[0])
         except Exception as exc:
             raise MatrixException("Constructor: args not a matrix") from exc
-        if type(args) == list:
+        if isinstance(args, list):
             for row in args:
-                if type(row) == list:
+                if isinstance(row, list):
                     if size == len(row):
                         for element in row:
-                            if (type(element) != int) and (type(element) != Fraction) and (type(element) != float):
+                            if not isinstance(element,int) and not isinstance(element,Fraction) and not isinstance(element,float):
                                 raise MatrixException("Constructor: args not a matrix, not a matrix of numbers")
                     else:
                         raise MatrixException("Constructor: args not a matrix, rows have different length")
@@ -41,7 +41,6 @@ class Matrix:
             self.matrix_template = args
         else:
             raise MatrixException("Constructor: args not a matrix, not array")
-        
 
     def __str__(self) -> str:
         matrix_output = ""
@@ -58,7 +57,6 @@ class Matrix:
 
     #Adds. r1(row number) += r2(row number)*mult
     def add_trans(self, r1, r2, mult=None):
-        
         """
         Adds row r2 to row r1, scaled by mult if provided
         
@@ -134,7 +132,7 @@ class Matrix:
         if r not in range((len(self.matrix_template))):
             pass
         if mult != 0:
-            self.matrix_template[r - 1] = [Fraction(Fraction(self.matrix_template[r - 1][i]), Fraction(mult)) for i in range(len(self.matrix_template[r - 1]))] 
+            self.matrix_template[r - 1] = [Fraction(Fraction(self.matrix_template[r - 1][i]), Fraction(mult)) for i in range(len(self.matrix_template[r - 1]))]
 
 
     #Swaps two rows of the matrix.
@@ -153,8 +151,9 @@ class Matrix:
             self.matrix_template[r1 - 1],
         )
 
+
     @staticmethod
-    def determinant_doer(mat_rix):#Counts determinant doer
+    def _determinant_doer(mat_rix):#Counts determinant doer
         det = 0
         if len(mat_rix) == 2:
             det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
@@ -167,8 +166,8 @@ class Matrix:
                         if column != col:
                             minor_mat_rix[row-1].append(mat_rix[row][column])
 
-                det = det + pow(-1,col) * mat_rix[0][col] * determinant_doer(minor_mat_rix)
-        return det           
+                det = det + pow(-1,col) * mat_rix[0][col] * Matrix._determinant_doer(minor_mat_rix)
+        return det
 #Counts determinant header
     def determinant(self):
         """
@@ -176,7 +175,6 @@ class Matrix:
 
         @return: the determinant of the matrix
         """
-        
         if len(self.matrix_template) != (len(self.matrix_template[0])-1):
             raise MatrixException("Not square matrix do not have determinant")
 
@@ -189,7 +187,7 @@ class Matrix:
             for column in range(len(self.matrix_template)):
                 mat_rix_square[row[0]].append(self.matrix_template[row][column])
 
-        return determinant_doer(mat_rix_square)
+        return Matrix._determinant_doer(mat_rix_square)
 
 
 
@@ -235,7 +233,7 @@ class Matrix:
             r_index = 0
             count_1 = 0  # counts the number of rows with leading value "1" in this row
             for _ in ranks: # iterates through the rows
-                if r_index == len(row_d) and count_1 == 0: # checks if this value needs to be changed to "1" 
+                if r_index == len(row_d) and count_1 == 0: # checks if this value needs to be changed to "1"
                     temp_list_zero = []
                     count_index = 0
                     for item_zero in self.matrix_template[r_index]: #calculates the number of zeros in the row, and checks if the number of zeros is equal to the number of columns with leading value "1"
@@ -266,22 +264,4 @@ class Matrix:
                         continue
                     find_0(self, r_index, n, 0,count_1,row_d)
                 r_index += 1
-
-
-def determinant_doer(mat_rix):
-    det = 0
-
-    if len(mat_rix) == 2:
-        det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
-    else:
-        for col in range(len(mat_rix)):
-            minor_mat_rix=[]
-            for row in range(1,len(mat_rix)):
-                minor_mat_rix.append([])
-                for column in range(len(mat_rix)):
-                    if column != col:
-                        minor_mat_rix[row-1].append(mat_rix[row][column])
-
-            det = det + pow(-1,col) * mat_rix[0][col] * determinant_doer(minor_mat_rix)
-    return det
-    
+                
