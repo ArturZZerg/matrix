@@ -44,7 +44,7 @@ from matrix import Matrix,calc_matrix
 A = Matrix([[1, 2], [3, 4]])
 
 # Convert to RREF
-calc_matrix(A)
+A.rref_calc()
 print(A)
  ```
 
@@ -66,7 +66,7 @@ Initialize the matrix with a 2D list of numbers.
 - `swap_trans(row1: int, row2: int)`: Swaps two rows of the matrix.
 
 ### **RREF Conversion**
-- `calc_matrix("matrix")`: Converts the matrix to **Reduced Row Echelon Form**.
+- `rref_calc(self)`: Converts the matrix to **Reduced Row Echelon Form**.
 
 ## **CONTRIBUTING**
 
