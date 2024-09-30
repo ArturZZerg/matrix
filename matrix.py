@@ -1,25 +1,49 @@
 from fractions import Fraction
 
+#custom exeption class
+class MatrixException(Exception):
+    pass
+
 class Matrix:
     matrix_template = []
 
     def __init__(self, args):
-        self.matrix_output = ""
-        self.matrix_template = args
+        
+        try:
+            size= len(args[0])
+        except:
+            raise MatrixException("Constructor: args not a matrix")
+            
+        if type(args) == list:
+            for row in args:
+                if type(row) == list:
+                    if size == len(row):
+                         for element in row:
+                             if (type(element) != int) and (type(element) != Fraction) and (type(element) != float):
+                                 raise MatrixException("Constructor: args not a matrix, not a matrix of numbers")
+                    else:
+                        raise MatrixException("Constructor: args not a matrix, rows have different length")
+                else:
+                    raise MatrixException("Constructor: args not a matrix, not 2d array")
+            self.matrix_template = args
+        else:
+            raise MatrixException("Constructor: args not a matrix, not array")
+        
 
     def __str__(self) -> str:
-        self.matrix_output = ""
+        matrix_output = ""
         for i in self.matrix_template:
             for c in i:
                 if len(str(c)) < 3:
                     space = " "*(3-int(len(str(c))))
-                    self.matrix_output += f" [{space}{c}] "
+                    matrix_output += f" [{space}{c}] "
                 else:
-                    self.matrix_output += f" [{c}] "
-            self.matrix_output += "\n"
+                    matrix_output += f" [{c}] "
+            matrix_output += "\n"
 
-        return self.matrix_output
+        return matrix_output
 
+    #Adds. r1(row number) += r2(row number)*mult
     def add_trans(self, r1, r2, mult=None):
         if r1 not in range((len(self.matrix_template))) or r2 not in range(
             (len(self.matrix_template))
@@ -40,6 +64,7 @@ class Matrix:
                 for i in range(len(self.matrix_template[r2 - 1]))
             ]
 
+    #Subtracts. r1(row number) -= r2(row number)*mult.
     def sub_trans(self, r1, r2, mult=None):
         if r1 not in range((len(self.matrix_template))) or r2 not in range(
             (len(self.matrix_template))
@@ -59,6 +84,7 @@ class Matrix:
                 for i in range(len(self.matrix_template[r2 - 1]))
             ]
 
+    #Multiplies r(row number)+=mult.
     def mult_trans(self, r, mult):
         if r not in range((len(self.matrix_template))):
             pass
@@ -68,15 +94,17 @@ class Matrix:
                 for i in range(len(self.matrix_template[r - 1]))
             ]
 
+    #Divides r(row number)/=mult.
     def div_trans(self, r, mult):
         if r not in range((len(self.matrix_template))):
             pass
         if mult != 0:
             self.matrix_template[r - 1] = [
-                Fraction(self.matrix_template[r - 1][i], mult)
+                Fraction(Fraction(self.matrix_template[r - 1][i]), Fraction(mult))
                 for i in range(len(self.matrix_template[r - 1]))
             ]
 
+    #Swaps two rows of the matrix.
     def swap_trans(self, r1, r2):
         if r1 not in range((len(self.matrix_template))) or r2 not in range(
             (len(self.matrix_template))
@@ -87,8 +115,8 @@ class Matrix:
             self.matrix_template[r1 - 1],
         )
 
-
-def calc_matrix(mat_rix):
+#Converts the matrix to Reduced Row Echelon Form.
+def solve_system_of_equations(mat_rix):
     def find_0(our_matrix, row_index, col, target,count1,rowd):
         if count1:
             if (our_matrix.matrix_template[row_index][col]
@@ -143,5 +171,37 @@ def calc_matrix(mat_rix):
                     continue
                 find_0(mat_rix, r_index, n, 0,count_1,row_d)
             r_index += 1
+            
+#Counts determinant header
+def determinant(mat_rix):
+    if len(mat_rix.matrix_template) != (len(mat_rix.matrix_template[0])-1):
+        raise MatrixException("Not square matrix do not have determinant")
+    
+    if len(mat_rix.matrix_template) == 1:
+        return mat_rix.matrix_template[0][0]
+    
+    mat_rix_square = []
+    for row in range(len(mat_rix.matrix_template)):
+        mat_rix_square.append([])
+        for column in range(len(mat_rix.matrix_template)):
+            mat_rix_square[row].append(mat_rix.matrix_template[row][column])
 
- 
+    return determinant_doer(mat_rix_square)
+
+#Counts determinant doer
+def determinant_doer(mat_rix):
+    det = 0
+    
+    if len(mat_rix) == 2:
+        det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
+    else:
+        for col in range(len(mat_rix)):
+            minor_mat_rix=[]
+            for row in range(1,len(mat_rix)):
+                minor_mat_rix.append([])
+                for column in range(len(mat_rix)):
+                    if column != col:
+                        minor_mat_rix[row-1].append(mat_rix[row][column])
+            
+            det = det + pow(-1,col) * mat_rix[0][col] * determinant_doer(minor_mat_rix)
+    return det
