@@ -25,16 +25,15 @@ class Matrix:
     def __init__(self, args):      
         try:
             size= len(args[0])
-        except:
-            raise MatrixException("Constructor: args not a matrix")
-            
+        except Exception as exc:
+            raise MatrixException("Constructor: args not a matrix") from exc
         if type(args) == list:
             for row in args:
                 if type(row) == list:
                     if size == len(row):
-                         for element in row:
-                             if (type(element) != int) and (type(element) != Fraction) and (type(element) != float):
-                                 raise MatrixException("Constructor: args not a matrix, not a matrix of numbers")
+                        for element in row:
+                            if (type(element) != int) and (type(element) != Fraction) and (type(element) != float):
+                                raise MatrixException("Constructor: args not a matrix, not a matrix of numbers")
                     else:
                         raise MatrixException("Constructor: args not a matrix, rows have different length")
                 else:
@@ -153,41 +152,47 @@ class Matrix:
             self.matrix_template[r2 - 1],
             self.matrix_template[r1 - 1],
         )
-            
+
+    @staticmethod
+    def determinant_doer(mat_rix):#Counts determinant doer
+        det = 0
+        if len(mat_rix) == 2:
+            det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
+        else:
+            for col in range(len(mat_rix)):
+                minor_mat_rix=[]
+                for row in range(1,len(mat_rix)):
+                    minor_mat_rix.append([])
+                    for column in range(len(mat_rix)):
+                        if column != col:
+                            minor_mat_rix[row-1].append(mat_rix[row][column])
+
+                det = det + pow(-1,col) * mat_rix[0][col] * determinant_doer(minor_mat_rix)
+        return det           
 #Counts determinant header
-  def determinant(self):
-      if len(self.matrix_template) != (len(self.matrix_template[0])-1):
-          raise MatrixException("Not square matrix do not have determinant")
+    def determinant(self):
+        """
+        Calculates the determinant of a square matrix
 
-      if len(self.matrix_template) == 1:
-          return self.matrix_template[0][0]
+        @return: the determinant of the matrix
+        """
+        
+        if len(self.matrix_template) != (len(self.matrix_template[0])-1):
+            raise MatrixException("Not square matrix do not have determinant")
 
-      mat_rix_square = []
-      for row in range(len(self.matrix_template)):
-          mat_rix_square.append([])
-          for column in range(len(self.matrix_template)):
-              mat_rix_square[row].append(self.matrix_template[row][column])
+        if len(self.matrix_template) == 1:
+            return self.matrix_template[0][0]
 
-      return determinant_doer(mat_rix_square)
+        mat_rix_square = []
+        for row in enumerate(self.matrix_template):
+            mat_rix_square.append([])
+            for column in range(len(self.matrix_template)):
+                mat_rix_square[row[0]].append(self.matrix_template[row][column])
 
-#Counts determinant doer
-  def determinant_doer(self):
-      det = 0
+        return determinant_doer(mat_rix_square)
 
-      if len(self) == 2:
-          det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
-      else:
-          for col in range(len(self)):
-              minor_mat_rix=[]
-              for row in range(1,len(self)):
-                  minor_mat_rix.append([])
-                  for column in range(len(self)):
-                      if column != col:
-                          minor_mat_rix[row-1].append(self[row][column])
 
-              det = det + pow(-1,col) * self[0][col] * determinant_doer(minor_mat_rix)
-      return det
-    
+
     def rref_calc(self):
         """
         Finds the RREF of a matrix.
@@ -263,3 +268,20 @@ class Matrix:
                 r_index += 1
 
 
+def determinant_doer(mat_rix):
+    det = 0
+
+    if len(mat_rix) == 2:
+        det = mat_rix[0][0] * mat_rix[1][1] - mat_rix[0][1] * mat_rix[1][0]
+    else:
+        for col in range(len(mat_rix)):
+            minor_mat_rix=[]
+            for row in range(1,len(mat_rix)):
+                minor_mat_rix.append([])
+                for column in range(len(mat_rix)):
+                    if column != col:
+                        minor_mat_rix[row-1].append(mat_rix[row][column])
+
+            det = det + pow(-1,col) * mat_rix[0][col] * determinant_doer(minor_mat_rix)
+    return det
+    
