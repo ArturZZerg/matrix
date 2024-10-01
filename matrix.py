@@ -185,7 +185,7 @@ class Matrix:
         for row in enumerate(self.matrix_template):
             mat_rix_square.append([])
             for column in range(len(self.matrix_template)):
-                mat_rix_square[row[0]].append(self.matrix_template[row][column])
+                mat_rix_square[row[0]].append(self.matrix_template[row[0]][column])
 
         return Matrix._determinant_doer(mat_rix_square)
 
@@ -264,4 +264,3 @@ class Matrix:
                         continue
                     find_0(self, r_index, n, 0,count_1,row_d)
                 r_index += 1
-                
