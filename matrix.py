@@ -1,4 +1,4 @@
-
+import random
 """
 This module provides a Matrix class for matrix operations with Fraction support.
 
@@ -220,6 +220,7 @@ class Matrix:
             else:
                 if row_index == 0:
                     self.div_trans(row_index + 1+len(row_d), self.matrix_template[row_index+len(row_d)][col])
+                self.div_trans(len(row_d)+1, self.matrix_template[len(row_d)][col])
                 if (self.matrix_template[row_index][col]
                     + ((self.matrix_template[len(row_d)][col])* self.matrix_template[row_index][col]*(-1))) == target:
                     mult = self.matrix_template[row_index][col]*(-1)
@@ -255,7 +256,7 @@ class Matrix:
                     count_index = 0
                     if len(row_d) == len(self.matrix_template): # checks if the number of rows with leading value "1" is equal to the number of rows in the matrix. If so, the matrix is in RREF
                         break
-                    for item_zero in self.matrix_template[len(row_d)]: # calculates the number of zeros in the row
+                    for item_zero in self.matrix_template[r_index]: # calculates the number of zeros in the row
                         if item_zero == 0 and (
                             (count_index in row_d) or (count_index == n)):
                             temp_list_zero.append(item_zero)
@@ -264,3 +265,4 @@ class Matrix:
                         continue
                     find_0(self, r_index, n, 0,count_1,row_d)
                 r_index += 1
+
